@@ -78,6 +78,16 @@
 
    知识点：[外联结](#外联结（outer join）)
 
+6. 题目：[查找重复的电子邮箱](https://leetcode-cn.com/problems/duplicate-emails/)
+
+   解决方案：
+
+   ```mysql
+   select distinct a.Email from Person a, Person b where a.Email = b.Email and a.Id != b.Id;
+   ```
+
+   知识点：[检索不同的行](#检索不同的行（distinct）)
+
 
 
 ## 联结（join）
