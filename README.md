@@ -67,6 +67,17 @@
 
    知识点：[检索不同的行](#检索不同的行（distinct）)
 
+5. 题目：[超过经理收入的员工](https://leetcode-cn.com/problems/employees-earning-more-than-their-managers/)
+
+   解决方案：
+
+   ```mysql
+   select a.name as Employee from Employee a left join Employee b on a.managerId = b.id 
+   where a.salary > b.salary;
+   ```
+
+   知识点：[外联结](#外联结（outer join）)
+
 
 
 ## 联结（join）
