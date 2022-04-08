@@ -4,6 +4,8 @@
 
 参考资料：《MySQL 必知必会》
 
+
+
 ## 题目
 
 1. 题目：[组合两个表](https://leetcode-cn.com/problems/combine-two-tables/)
@@ -15,6 +17,8 @@
    ```
 
    知识点：[外联结](#外联结（outer join）)
+
+   
 
 2. 题目：[第二高的薪水](https://leetcode-cn.com/problems/second-highest-salary/)
 
@@ -36,6 +40,22 @@
 
    注：如果子查询没有查找到数据，会返回 null
 
+   
+
+3. 题目：[分数排名](https://leetcode-cn.com/problems/rank-scores/)
+
+   解决方案：
+
+   ```mysql
+   select score, (
+       select count(distinct score) from Scores where score>=a.score
+   ) as 'rank' from Scores as a order by score DESC;
+   ```
+
+   知识点：[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)
+
+
+
 ## 联结（join）
 
 ### 为什么要使用联结？
@@ -56,6 +76,8 @@
 
 如果需要将 A、B 两张表根据某字段合并，且保留 B 表中相关字段不存在的行，应使用外联结。
 
+
+
 ## 限制结果行数（limit）
 
 > SELECT 语句返回所有匹配的行，它们可能是指定表中的每个行。为了返回第一行或前几行，可使用 LIMIT 子句。
@@ -64,9 +86,13 @@
 >
 > MySQL 5 支持 LIMIT 的另一种替代语法。LIMIT 4 OFFSET 3 意为从行 3 开始取 4 行，就像 LIMIT 3, 4 一样。
 
+
+
 ## 检索不同的行（distinct）
 
 `distinct` 作用于所有的列，仅当整行完全相同才会去除该行。
+
+
 
 ## 排序检索数据（order by）
 
