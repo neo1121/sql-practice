@@ -4,6 +4,38 @@
 
 参考资料：《MySQL 必知必会》
 
+## 题目
+
+1. 题目：[组合两个表](https://leetcode-cn.com/problems/combine-two-tables/)
+
+   解决方案：
+
+   ```mysql
+   select firstName,lastName,city,state from Person left join Address on Person.personId = Address.personId;
+   ```
+
+   知识点：[外联结](#外联结（outer join）)
+
+2. 题目：[第二高的薪水](https://leetcode-cn.com/problems/second-highest-salary/)
+
+   解决方案：
+
+   ```mysql
+   -- 子查询 + limit
+   select (
+       select distinct salary from Employee order by salary DESC limit 1 offset 1
+   ) as SecondHighestSalary;
+   
+   -- ifnull + limit
+   select ifnull(
+       (select distinct salary from Employee order by salary DESC limit 1 offset 1), null
+   ) as SecondHighestSalary;
+   ```
+
+   知识点：[限制结果行数](#限制结果行数（limit）)，[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)
+
+   注：如果子查询没有查找到数据，会返回 null
+
 ## 联结（join）
 
 ### 为什么要使用联结？
@@ -24,7 +56,24 @@
 
 如果需要将 A、B 两张表根据某字段合并，且保留 B 表中相关字段不存在的行，应使用外联结。
 
-1. 题目：[组合两个表](https://leetcode-cn.com/problems/combine-two-tables/)
+## 限制结果行数（limit）
 
-   解决方案：`select firstName,lastName,city,state from Person left join Address on Person.personId = Address.personId;`
+> SELECT 语句返回所有匹配的行，它们可能是指定表中的每个行。为了返回第一行或前几行，可使用 LIMIT 子句。
+>
+> LIMIT 5, 5 指示 MySQL 返回从行 5 开始的 5 行。第一个数为开始位置，第二个数为要检索的行数。
+>
+> MySQL 5 支持 LIMIT 的另一种替代语法。LIMIT 4 OFFSET 3 意为从行 3 开始取 4 行，就像 LIMIT 3, 4 一样。
 
+## 检索不同的行（distinct）
+
+`distinct` 作用于所有的列，仅当整行完全相同才会去除该行。
+
+## 排序检索数据（order by）
+
+> 检索出的数据并不是以存粹的随机顺序显示的。如果不排序，数据一般将以它在底层表中出现的顺序显示。
+>
+> 关系数据库设计理论认为，如果不明确规定排序顺序，则不应该假定检索出的数据的顺序有意义。
+>
+> **用非检索的列排序数据是完全合法的**
+
+在按照多个列进行排序时，排序会完全按照所规定的顺序进行。如果前一字段在表中是唯一的，则不会再按照后面的字段排序。
