@@ -67,6 +67,8 @@
 
    知识点：[检索不同的行](#检索不同的行（distinct）)
 
+   
+
 5. 题目：[超过经理收入的员工](https://leetcode-cn.com/problems/employees-earning-more-than-their-managers/)
 
    解决方案：
@@ -78,6 +80,8 @@
 
    知识点：[外联结](#外联结（outer join）)
 
+   
+
 6. 题目：[查找重复的电子邮箱](https://leetcode-cn.com/problems/duplicate-emails/)
 
    解决方案：
@@ -87,6 +91,19 @@
    ```
 
    知识点：[检索不同的行](#检索不同的行（distinct）)
+
+   
+
+7. 题目：[从不订购的客户](https://leetcode-cn.com/problems/customers-who-never-order/)
+
+   解决方案：
+
+   ```mysql
+   select a.Name as Customers from Customers a left join Orders b on b.CustomerId = a.Id
+   where b.CustomerId is null;
+   ```
+
+   知识点：[外联结](#外联结（outer join）)
 
 
 
