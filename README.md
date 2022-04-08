@@ -53,6 +53,19 @@
    ```
 
    知识点：[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)
+   
+   
+   
+4. 题目：[连续出现的数字](https://leetcode-cn.com/problems/consecutive-numbers/)
+
+   解决方案：
+
+   ```mysql
+   select distinct a.Num as ConsecutiveNums from Logs a, Logs b, Logs c 
+   where a.Id = b.Id - 1 and a.Id = c.Id - 2 and a.Num = b.Num and a.Num = c.Num;
+   ```
+
+   知识点：[检索不同的行](#检索不同的行（distinct）)
 
 
 
