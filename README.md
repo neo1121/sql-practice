@@ -10,6 +10,8 @@
 
 1. 题目：[组合两个表](https://leetcode-cn.com/problems/combine-two-tables/)
 
+   知识点：[外联结](#外联结（outer join）)
+
    解决方案：
 
    ```mysql
@@ -17,11 +19,11 @@
    from Person left join Address on Person.personId = Address.personId;
    ```
 
-   知识点：[外联结](#外联结（outer join）)
-
    
 
 2. 题目：[第二高的薪水](https://leetcode-cn.com/problems/second-highest-salary/)
+
+   知识点：[限制结果行数](#限制结果行数（limit）)，[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
 
    解决方案：
 
@@ -45,16 +47,14 @@
    ) as SecondHighestSalary;
    ```
 
-   知识点：[限制结果行数](#限制结果行数（limit）)，[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
-
-   注：如果子查询没有查找到数据，会返回 null
-
    
 
 3. 题目：[分数排名](https://leetcode-cn.com/problems/rank-scores/)
 
-   解决方案：
+   知识点：[在聚集函数中使用 distinct](#在聚集函数中使用 distinct)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
 
+   解决方案：
+   
    ```mysql
    select score, (
        select count(distinct score) 
@@ -63,11 +63,11 @@
    ) as 'rank' from Scores as a order by score DESC;
    ```
    
-   知识点：[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
-   
    
    
 4. 题目：[连续出现的数字](https://leetcode-cn.com/problems/consecutive-numbers/)
+
+   知识点：[检索不同的行](#检索不同的行（distinct）)
 
    解决方案：
 
@@ -77,11 +77,11 @@
    where a.Id = b.Id - 1 and a.Id = c.Id - 2 and a.Num = b.Num and a.Num = c.Num;
    ```
 
-   知识点：[检索不同的行](#检索不同的行（distinct）)
-
    
 
 5. 题目：[超过经理收入的员工](https://leetcode-cn.com/problems/employees-earning-more-than-their-managers/)
+
+   知识点：[外联结](#外联结（outer join）)
 
    解决方案：
 
@@ -91,11 +91,11 @@
    where a.salary > b.salary;
    ```
 
-   知识点：[外联结](#外联结（outer join）)
-
    
 
 6. 题目：[查找重复的电子邮箱](https://leetcode-cn.com/problems/duplicate-emails/)
+
+   知识点：[检索不同的行](#检索不同的行（distinct）)
 
    解决方案：
 
@@ -105,28 +105,28 @@
    where a.Email = b.Email and a.Id != b.Id;
    ```
 
-   知识点：[检索不同的行](#检索不同的行（distinct）)
-
    
 
 7. 题目：[从不订购的客户](https://leetcode-cn.com/problems/customers-who-never-order/)
 
-   解决方案：
+   知识点：[外联结](#外联结（outer join）)
 
+   解决方案：
+   
    ```mysql
    select a.Name as Customers 
    from Customers a left join Orders b on b.CustomerId = a.Id
    where b.CustomerId is null;
    ```
    
-   知识点：[外联结](#外联结（outer join）)
-   
    
    
 8. 题目：[部门工资最高的员工](https://leetcode-cn.com/problems/department-highest-salary/)
 
-   解决方案：
+   知识点：[外联结](#外联结（outer join）)，[子查询](#子查询)，[数据分组](#数据分组（group by）)，[汇总数据](#汇总数据)
 
+   解决方案：
+   
    ```mysql
    -- 将部门工资排名，再选出排名第一的行
    -- 性能较差
@@ -150,7 +150,6 @@
    );
    ```
    
-   知识点：[检索不同的行](#检索不同的行（distinct）)，[外联结](#外联结（outer join）)，[子查询](#子查询)，[数据分组](#数据分组（group by）)
 
 
 
@@ -221,6 +220,40 @@ limit
 
 
 
+## 汇总数据
+
+### 为什么要使用聚集函数？
+
+> 经常需要汇总数据而不用把它们实际检索出来，为此 MySQL 提供了专门的函数。
+>
+> 这些函数是高校设计的，它们返回的结果一般比你在自己的客户机应用程序中计算要快得多。
+
+### MySQL 常用的 5 个聚集函数
+
+| 函数    | 说明             |
+| ------- | :--------------- |
+| AVG()   | 返回某列的平均值 |
+| COUNT() | 返回某列的行数   |
+| MAX()   | 返回某列的最大值 |
+| MIN()   | 返回某列的最小值 |
+| SUM()   | 返回某列值之和   |
+
+此外，MySQL 还支持一系列的标准偏差聚集函数，此处省略。
+
+### 在聚集函数中使用 distinct
+
+**MySQL 5 及后期版本支持在聚集函数中使用 distinct**
+
+在聚集函数中使用 distinct 时必须指定列名，且不能与计算或表达式一起使用。
+
+> **将 DISTINCT 用于 MIN() 和 MAX()** 虽然 DISTINCT 从技术上可用于 MIN() 和 MAX()，但这样做实际上没有价值。一个列中的最小值和最大值不管是否包含不同值都是相同的。
+
+### 组合聚集函数
+
+> SELECT 语句可根据需要包含多个聚集函数。
+
+
+
 ## 分组数据
 
 ### 数据分组（group by）
@@ -250,6 +283,8 @@ limit
 > 对于能嵌套的子查询的数目没有限制，不过在实际使用时由于性能的限制，不能嵌套太多的子查询。
 >
 > **逐渐增加子查询来建立查询** 首先，建立和测试最内层的查询。然后，用硬编码数据建立和测试外层查询，并且仅在确认它正常后才嵌入子查询。
+
+**如果子查询没有查询到数据，会返回 null**
 
 ### 利用子查询进行过滤
 
