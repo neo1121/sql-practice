@@ -1,6 +1,6 @@
 # SQL-Practice
 
-收录做过的 SQL 练习，方便以后查看复习
+收录做过的 SQL 练习，方便以后查看复习。
 
 参考资料：《MySQL 必知必会》
 
@@ -13,7 +13,8 @@
    解决方案：
 
    ```mysql
-   select firstName,lastName,city,state from Person left join Address on Person.personId = Address.personId;
+   select firstName,lastName,city,state 
+   from Person left join Address on Person.personId = Address.personId;
    ```
 
    知识点：[外联结](#外联结（outer join）)
@@ -27,16 +28,24 @@
    ```mysql
    -- 子查询 + limit
    select (
-       select distinct salary from Employee order by salary DESC limit 1 offset 1
+       select distinct salary 
+       from Employee 
+       order by salary DESC 
+       limit 1 offset 1
    ) as SecondHighestSalary;
    
    -- ifnull + limit
    select ifnull(
-       (select distinct salary from Employee order by salary DESC limit 1 offset 1), null
+       (
+           select distinct salary 
+        	from Employee 
+        	order by salary DESC 
+        	limit 1 offset 1
+       ), null
    ) as SecondHighestSalary;
    ```
 
-   知识点：[限制结果行数](#限制结果行数（limit）)，[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)
+   知识点：[限制结果行数](#限制结果行数（limit）)，[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
 
    注：如果子查询没有查找到数据，会返回 null
 
@@ -48,11 +57,13 @@
 
    ```mysql
    select score, (
-       select count(distinct score) from Scores where score>=a.score
+       select count(distinct score) 
+       from Scores 
+       where score>=a.score
    ) as 'rank' from Scores as a order by score DESC;
    ```
-
-   知识点：[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)
+   
+   知识点：[检索不同的行](#检索不同的行（distinct）)，[排序检索数据](#排序检索数据（order by）)，[子查询](#子查询)
    
    
    
@@ -61,7 +72,8 @@
    解决方案：
 
    ```mysql
-   select distinct a.Num as ConsecutiveNums from Logs a, Logs b, Logs c 
+   select distinct a.Num as ConsecutiveNums 
+   from Logs a, Logs b, Logs c 
    where a.Id = b.Id - 1 and a.Id = c.Id - 2 and a.Num = b.Num and a.Num = c.Num;
    ```
 
@@ -74,7 +86,8 @@
    解决方案：
 
    ```mysql
-   select a.name as Employee from Employee a left join Employee b on a.managerId = b.id 
+   select a.name as Employee 
+   from Employee a left join Employee b on a.managerId = b.id 
    where a.salary > b.salary;
    ```
 
@@ -87,7 +100,9 @@
    解决方案：
 
    ```mysql
-   select distinct a.Email from Person a, Person b where a.Email = b.Email and a.Id != b.Id;
+   select distinct a.Email 
+   from Person a, Person b 
+   where a.Email = b.Email and a.Id != b.Id;
    ```
 
    知识点：[检索不同的行](#检索不同的行（distinct）)
@@ -99,11 +114,60 @@
    解决方案：
 
    ```mysql
-   select a.Name as Customers from Customers a left join Orders b on b.CustomerId = a.Id
+   select a.Name as Customers 
+   from Customers a left join Orders b on b.CustomerId = a.Id
    where b.CustomerId is null;
    ```
-
+   
    知识点：[外联结](#外联结（outer join）)
+   
+   
+   
+8. 题目：[部门工资最高的员工](https://leetcode-cn.com/problems/department-highest-salary/)
+
+   解决方案：
+
+   ```mysql
+   -- 将部门工资排名，再选出排名第一的行
+   -- 性能较差
+   select Department,Employee,Salary 
+   from (
+       select b.name as Department, a.name as Employee, a.salary,(
+           select count(distinct salary) 
+           from Employee 
+           where salary>=a.salary and departmentId=a.departmentId
+       ) as 'rank' 
+       from Employee a left join Department b on a.departmentId = b.id
+   ) c 
+   where c.rank = 1;
+   
+   -- 用子查询查出各部门最高工资
+   from Employee left join Department on Employee.departmentId = Department.id
+   where (salary, departmentId) in (
+       select max(salary) as salary,departmentId
+       from Employee
+       group by departmentId
+   );
+   ```
+   
+   知识点：[检索不同的行](#检索不同的行（distinct）)，[外联结](#外联结（outer join）)，[子查询](#子查询)，[数据分组](#数据分组（group by）)
+
+
+
+## select 子句及其顺序
+
+**SQL 语句中仅 select 子句是必须存在的，其他子句可按需使用**
+
+```mysql
+-- 子句书写顺序
+select
+from 
+where 
+group by
+having
+order by
+limit
+```
 
 
 
@@ -154,3 +218,48 @@
 > **用非检索的列排序数据是完全合法的**
 
 在按照多个列进行排序时，排序会完全按照所规定的顺序进行。如果前一字段在表中是唯一的，则不会再按照后面的字段排序。
+
+
+
+## 分组数据
+
+### 数据分组（group by）
+
+> 分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。
+>
+> GROUP BY 子句指示 MySQL 分组数据，然后对每个组而不是整个结果集进行聚集。
+>
+> **GROUP BY 子句必须出现在 WHERE 子句之后，ORDER BY 子句之前。**
+
+### 过滤分组（having）
+
+> 所有类型的 WHERE 子句都可以用 HAVING 来替代。唯一的差别是 WHERE 过滤行，而 HAVING 过滤分组。
+
+### having 和 where 的差别？
+
+> WHERE 在分组前过滤，HAVING 在数据分组后进行过滤。
+>
+> WHERE 排除的行不包括在分组中。这可能会改变计算值，从而影响 HAVING 子句中基于这些值过滤掉的分组。
+
+
+
+## 子查询
+
+**MySQL 4.1 及以上版本才支持子查询**
+
+> 对于能嵌套的子查询的数目没有限制，不过在实际使用时由于性能的限制，不能嵌套太多的子查询。
+>
+> **逐渐增加子查询来建立查询** 首先，建立和测试最内层的查询。然后，用硬编码数据建立和测试外层查询，并且仅在确认它正常后才嵌入子查询。
+
+### 利用子查询进行过滤
+
+**列必须匹配** 在 where 子句中使用子查询于 in 操作符时，应确保子查询返回的列与 where 子句中的列匹配。
+
+> 通常，子查询将返回单个列并与单个列匹配，但如果需要也可以使用多个列。
+
+### 作为计算字段使用子查询
+
+> **相关子查询（correlated subquery）** 涉及外部查询的子查询。任何时候只要列名可能有多义性，就必须使用这种语法（表名和列名由一个句点分隔）。
+
+**必须注意限制有歧义性的列名** 如果 A 表与 B 表有相同的列名(id)，则在子查询中不能直接使用 `where id = id`，而必须使用 `where A.id = b.id`。
+
