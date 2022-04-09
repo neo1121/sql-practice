@@ -189,7 +189,20 @@
    );
    ```
 
-   
+11. 题目：[上升的温度](https://leetcode-cn.com/problems/rising-temperature/)
+
+    知识点：
+
+    解决方案：
+
+    ```mysql
+    -- DateDiff() 函数计算两个日期之差
+    SELECT w1.id
+    FROM Weather w1, Weather w2
+    WHERE DateDiff(w1.recordDate, w2.recordDate) = 1 and w1.Temperature > w2.Temperature;
+    ```
+
+    
 
 ## SELECT 子句及其顺序
 
