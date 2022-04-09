@@ -142,6 +142,7 @@
    where c.rank = 1;
    
    -- 用子查询查出各部门最高工资
+   select Department.name as Department, Employee.name as Employee, Employee.salary as Salary
    from Employee left join Department on Employee.departmentId = Department.id
    where (salary, departmentId) in (
        select max(salary) as salary,departmentId
@@ -153,6 +154,8 @@
 9. 题目：[部门工资前三高的所有员工](https://leetcode-cn.com/problems/department-top-three-salaries/)
 
    知识点：[外联结](#外联结（outer join）)，[子查询](#子查询)，[数据分组](#数据分组（group by）)，[汇总数据](#汇总数据)
+
+   解决方案：
 
    ```mysql
    select Department, Employee, Salary
@@ -166,6 +169,8 @@
    ) c
    where c.rank<=3;
    ```
+
+10. 题目：[删除重复的电子邮箱](https://leetcode-cn.com/problems/delete-duplicate-emails/)
 
    
 
