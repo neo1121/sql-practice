@@ -191,7 +191,7 @@
 
 11. 题目：[上升的温度](https://leetcode-cn.com/problems/rising-temperature/)
 
-    知识点：
+    知识点：[日期和时间处理函数](#日期和时间处理函数)
 
     解决方案：
 
@@ -200,6 +200,78 @@
     SELECT w1.id
     FROM Weather w1, Weather w2
     WHERE DateDiff(w1.recordDate, w2.recordDate) = 1 and w1.Temperature > w2.Temperature;
+    ```
+
+12. 题目：[行程和用户](https://leetcode-cn.com/problems/trips-and-users/)
+
+    知识点：[外联结](#外联结（OUTER JOIN）)，[子查询](#子查询)，[数值处理函数](#数值处理函数)
+
+    解决方案：
+
+    ```mysql
+    -- 禁止用户的id
+    # SELECT users_id
+    # FROM Users
+    # WHERE banned = 'Yes';
+    
+    -- 非禁止用户生成的订单总数
+    # SELECT request_at, COUNT(*)
+    # FROM Trips
+    # WHERE client_id NOT IN (
+    #     SELECT users_id
+    #     FROM Users
+    #     WHERE banned = 'Yes'
+    # ) AND driver_id NOT IN (
+    #     SELECT users_id
+    #     FROM Users
+    #     WHERE banned = 'Yes'
+    # )
+    # GROUP BY request_at;
+    
+    -- 被司机或乘客取消的非禁止用户生成的订单数量
+    # SELECT request_at, COUNT(*)
+    # FROM Trips
+    # WHERE client_id NOT IN (
+    #     SELECT users_id
+    #     FROM Users
+    #     WHERE banned = 'Yes'
+    # ) AND driver_id NOT IN (
+    #     SELECT users_id
+    #     FROM Users
+    #     WHERE banned = 'Yes'
+    # ) AND status like 'cancelled%'
+    # GROUP BY request_at;
+    
+    -- 完整题解
+    SELECT b.request_at AS Day, ROUND(IFNULL(a.cnt,0)/b.cnt,2) AS 'Cancellation Rate'
+    FROM (
+        SELECT request_at, COUNT(*) AS cnt
+        FROM Trips
+        WHERE client_id NOT IN (
+            SELECT users_id
+            FROM Users
+            WHERE banned = 'Yes'
+        ) AND driver_id NOT IN (
+            SELECT users_id
+            FROM Users
+            WHERE banned = 'Yes'
+        ) AND status LIKE 'cancelled%'
+        GROUP BY request_at
+    ) a RIGHT JOIN (
+        SELECT request_at, COUNT(*) AS cnt
+        FROM Trips
+        WHERE client_id NOT IN (
+            SELECT users_id
+            FROM Users
+            WHERE banned = 'Yes'
+        ) AND driver_id NOT IN (
+            SELECT users_id
+            FROM Users
+            WHERE banned = 'Yes'
+        )
+        GROUP BY request_at
+    ) b ON a.request_at = b.request_at
+    WHERE b.request_at BETWEEN '2013-10-01' AND '2013-10-03';
     ```
 
     
@@ -348,4 +420,62 @@ LIMIT
 > **相关子查询（correlated subquery）** 涉及外部查询的子查询。任何时候只要列名可能有多义性，就必须使用这种语法（表名和列名由一个句点分隔）。
 
 **必须注意限制有歧义性的列名** 如果 A 表与 B 表有相同的列名(id)，则在子查询中不能直接使用 `WHERE id = id`，而必须使用 `WHERE A.id = b.id`。
+
+
+
+## 数据处理函数
+
+**以下只列出常用函数**
+
+### 文本处理函数
+
+| 函数        | 说明              |
+| ----------- | ----------------- |
+| Left()      | 返回串左边的字符  |
+| Right()     | 返回串右边的字符  |
+| Length()    | 返回串的长度      |
+| Locate()    | 找出串的一个子串  |
+| LTrim()     | 去掉串左边的空格  |
+| RTrim()     | 去掉串右边的空格  |
+| Soundex()   | 返回串的SOUNDEX值 |
+| SubString() | 返回子串的字符    |
+| Lower()     | 将串转换为小写    |
+| Upper()     | 将串转换为大写    |
+
+### 日期和时间处理函数
+
+| 函数          | 说明                           |
+| ------------- | ------------------------------ |
+| AddDate()     | 增加一个日期（天、周等）       |
+| AddTime()     | 增加一个时间（时、分等）       |
+| CurDate()     | 返回当前日期                   |
+| CurTime()     | 返回当前时间                   |
+| Now()         | 返回当前日期和时间             |
+| Date()        | 返回日期时间的日期部分         |
+| Year()        | 返回一个日期的年份部分         |
+| Month()       | 返回一个日期的月份部分         |
+| Day()         | 返回一个日期的天数部分         |
+| DayOfWeek()   | 对于一个日期，返回对应的星期几 |
+| Time()        | 返回一个日期时间的时间部分     |
+| Hour()        | 返回一个时间的小时部分         |
+| Minute()      | 返回一个时间的分钟部分         |
+| Second()      | 返回一个时间的秒部分           |
+| DateDiff()    | 计算两个日期之差               |
+| Date_Add()    | 高度灵活的日期运算函数         |
+| Date_Format() | 返回一个格式化的日期或时间串   |
+
+### 数值处理函数
+
+| 函数        | 说明                     |
+| ----------- | ------------------------ |
+| Cos()       | 返回一个角度的余弦       |
+| Sin()       | 返回一个角度的正弦       |
+| Tan()       | 返回一个角度的正切       |
+| Abs()       | 返回一个数的绝对值       |
+| Exp()       | 返回 e (自然对数) 的幂   |
+| Mod()       | 返回除操作的余数         |
+| Pi()        | 返回圆周率               |
+| Sqrt()      | 返回一个数的平方根       |
+| Rand()      | 返回一个随机数           |
+| Round(x, d) | 将 x 四舍五入为 d 位小数 |
 
