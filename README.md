@@ -10,7 +10,7 @@
 
 1. 题目：[组合两个表](https://leetcode-cn.com/problems/combine-two-tables/)
 
-   知识点：[外联结](#外联结（OUTER JOIN）)
+   知识点：[外联结](#外联结(OUTER JOIN))
 
    解决方案：
 
@@ -23,7 +23,7 @@
 
 2. 题目：[第二高的薪水](https://leetcode-cn.com/problems/second-highest-salary/)
 
-   知识点：[限制结果行数](#限制结果行数（LIMIT）)，[检索不同的行](#检索不同的行（DISTINCT）)，[排序检索数据](#排序检索数据（ORDER BY）)，[子查询](#子查询)
+   知识点：[限制结果行数](#限制结果行数(LIMIT))，[检索不同的行](#检索不同的行(DISTINCT))，[排序检索数据](#排序检索数据(ORDER BY))，[子查询](#子查询)
 
    解决方案：
 
@@ -51,7 +51,7 @@
 
 3. 题目：[分数排名](https://leetcode-cn.com/problems/rank-scores/)
 
-   知识点：[在聚集函数中使用 DISTINCT](#在聚集函数中使用 DISTINCT)，[排序检索数据](#排序检索数据（ORDER BY）)，[子查询](#子查询)
+   知识点：[在聚集函数中使用 DISTINCT](#在聚集函数中使用 DISTINCT)，[排序检索数据](#排序检索数据(ORDER BY))，[子查询](#子查询)
 
    解决方案：
    
@@ -67,7 +67,7 @@
    
 4. 题目：[连续出现的数字](https://leetcode-cn.com/problems/consecutive-numbers/)
 
-   知识点：[检索不同的行](#检索不同的行（DISTINCT）)
+   知识点：[检索不同的行](#检索不同的行(DISTINCT))
 
    解决方案：
 
@@ -81,7 +81,7 @@
 
 5. 题目：[超过经理收入的员工](https://leetcode-cn.com/problems/employees-earning-more-than-their-managers/)
 
-   知识点：[外联结](#外联结（outer JOIN）)
+   知识点：[外联结](#外联结(outer JOIN))
 
    解决方案：
 
@@ -95,7 +95,7 @@
 
 6. 题目：[查找重复的电子邮箱](https://leetcode-cn.com/problems/duplicate-emails/)
 
-   知识点：[检索不同的行](#检索不同的行（DISTINCT）)
+   知识点：[检索不同的行](#检索不同的行(DISTINCT))
 
    解决方案：
 
@@ -109,7 +109,7 @@
 
 7. 题目：[从不订购的客户](https://leetcode-cn.com/problems/customers-who-never-order/)
 
-   知识点：[外联结](#外联结（OUTER JOIN）)
+   知识点：[外联结](#外联结(OUTER JOIN))
 
    解决方案：
    
@@ -123,7 +123,7 @@
    
 8. 题目：[部门工资最高的员工](https://leetcode-cn.com/problems/department-highest-salary/)
 
-   知识点：[外联结](#外联结（OUTER JOIN）)，[子查询](#子查询)，[数据分组](#数据分组（GROUP BY）)，[汇总数据](#汇总数据)
+   知识点：[外联结](#外联结(OUTER JOIN))，[子查询](#子查询)，[数据分组](#数据分组(GROUP BY))，[汇总数据](#汇总数据)
 
    解决方案：
    
@@ -151,9 +151,11 @@
    );
    ```
    
+   
+   
 9. 题目：[部门工资前三高的所有员工](https://leetcode-cn.com/problems/department-top-three-salaries/)
 
-   知识点：[外联结](#外联结（OUTER JOIN）)，[子查询](#子查询)，[数据分组](#数据分组（GROUP BY）)，[汇总数据](#汇总数据)
+   知识点：[外联结](#外联结(OUTER JOIN))，[子查询](#子查询)，[数据分组](#数据分组(GROUP BY))，[汇总数据](#汇总数据)
 
    解决方案：
 
@@ -170,24 +172,28 @@
    WHERE c.rank<=3;
    ```
 
+   
+
 10. 题目：[删除重复的电子邮箱](https://leetcode-cn.com/problems/delete-duplicate-emails/)
 
-   知识点：
+    知识点：
 
-   解决方案：
+    解决方案：
 
-   ```mysql
-   DELETE
-   FROM Person
-   WHERE Person.id IN (
-       SELECT id 
-       FROM (
-           SELECT a.id
-           FROM Person a, Person b
-           WHERE a.email = b.email AND a.id > b.id
-       ) c
-   );
-   ```
+       ```mysql
+    DELETE
+    FROM Person
+    WHERE Person.id IN (
+        SELECT id 
+        FROM (
+            SELECT a.id
+            FROM Person a, Person b
+            WHERE a.email = b.email AND a.id > b.id
+        ) c
+    );
+       ```
+
+    
 
 11. 题目：[上升的温度](https://leetcode-cn.com/problems/rising-temperature/)
 
@@ -202,9 +208,11 @@
     WHERE DateDiff(w1.recordDate, w2.recordDate) = 1 and w1.Temperature > w2.Temperature;
     ```
 
+    
+
 12. 题目：[行程和用户](https://leetcode-cn.com/problems/trips-and-users/)
 
-    知识点：[外联结](#外联结（OUTER JOIN）)，[子查询](#子查询)，[数值处理函数](#数值处理函数)
+    知识点：[外联结](#外联结(OUTER JOIN))，[子查询](#子查询)，[数值处理函数](#数值处理函数)
 
     解决方案：
 
@@ -274,7 +282,17 @@
     WHERE b.request_at BETWEEN '2013-10-01' AND '2013-10-03';
     ```
 
-    
+
+
+## 过滤数据
+
+### WHERE 子句
+
+### 组合 WHERE 子句
+
+### 用通配符进行过滤
+
+
 
 ## SELECT 子句及其顺序
 
@@ -293,21 +311,21 @@ LIMIT
 
 
 
-## 联结（JOIN）
+## 联结(JOIN)
 
 ### 为什么要使用联结？
 
-> 关系表的设计就是要保证把信息分解成多个表，一类数据一个表。各表通过某些常用的值（即关系设计中的关系（relational）互相关联）。
+> 关系表的设计就是要保证把信息分解成多个表，一类数据一个表。各表通过某些常用的值(即关系设计中的关系(relational)互相关联)。
 >
 > 关系数据可以有效地存储和方便地处理。因此，关系数据库的可伸缩性远比非关系数据库要好。
 >
-> **可伸缩性（Scale）**能够适应不断增加的工作量而不失败。设计良好的数据库或应用程序称之为可伸缩性好（scale well）。
+> **可伸缩性(Scale)**能够适应不断增加的工作量而不失败。设计良好的数据库或应用程序称之为可伸缩性好(scale well)。
 
 在开发中，常以关系表的形式设计数据库。如果希望使用一条语句查询出被存储在多张表中的数据，就会用到联结。
 
 联结不存在于实际的数据库表中，联结只会存在于查询的执行过程中。
 
-### 外联结（OUTER JOIN）
+### 外联结(OUTER JOIN)
 
 > 联结包含了那些在相关表中没有关联行的行。这种类型的联结称为外部联结。
 
@@ -315,7 +333,7 @@ LIMIT
 
 
 
-## 限制结果行数（LIMIT）
+## 限制结果行数(LIMIT)
 
 > SELECT 语句返回所有匹配的行，它们可能是指定表中的每个行。为了返回第一行或前几行，可使用 LIMIT 子句。
 >
@@ -325,13 +343,13 @@ LIMIT
 
 
 
-## 检索不同的行（DISTINCT）
+## 检索不同的行(DISTINCT)
 
 `DISTINCT` 作用于所有的列，仅当整行完全相同才会去除该行。
 
 
 
-## 排序检索数据（ORDER BY）
+## 排序检索数据(ORDER BY)
 
 > 检索出的数据并不是以存粹的随机顺序显示的。如果不排序，数据一般将以它在底层表中出现的顺序显示。
 >
@@ -379,7 +397,7 @@ LIMIT
 
 ## 分组数据
 
-### 数据分组（GROUP BY）
+### 数据分组(GROUP BY)
 
 > 分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。
 >
@@ -387,7 +405,7 @@ LIMIT
 >
 > **GROUP BY 子句必须出现在 WHERE 子句之后，ORDER BY 子句之前。**
 
-### 过滤分组（HAVING）
+### 过滤分组(HAVING)
 
 > 所有类型的 WHERE 子句都可以用 HAVING 来替代。唯一的差别是 WHERE 过滤行，而 HAVING 过滤分组。
 
@@ -417,7 +435,7 @@ LIMIT
 
 ### 作为计算字段使用子查询
 
-> **相关子查询（correlated subquery）** 涉及外部查询的子查询。任何时候只要列名可能有多义性，就必须使用这种语法（表名和列名由一个句点分隔）。
+> **相关子查询(correlated subquery)** 涉及外部查询的子查询。任何时候只要列名可能有多义性，就必须使用这种语法(表名和列名由一个句点分隔)。
 
 **必须注意限制有歧义性的列名** 如果 A 表与 B 表有相同的列名(id)，则在子查询中不能直接使用 `WHERE id = id`，而必须使用 `WHERE A.id = b.id`。
 
@@ -446,8 +464,8 @@ LIMIT
 
 | 函数          | 说明                           |
 | ------------- | ------------------------------ |
-| AddDate()     | 增加一个日期（天、周等）       |
-| AddTime()     | 增加一个时间（时、分等）       |
+| AddDate()     | 增加一个日期(天、周等)         |
+| AddTime()     | 增加一个时间(时、分等)         |
 | CurDate()     | 返回当前日期                   |
 | CurTime()     | 返回当前时间                   |
 | Now()         | 返回当前日期和时间             |
