@@ -150,8 +150,24 @@
    );
    ```
    
+9. 题目：[部门工资前三高的所有员工](https://leetcode-cn.com/problems/department-top-three-salaries/)
 
+   知识点：[外联结](#外联结（outer join）)，[子查询](#子查询)，[数据分组](#数据分组（group by）)，[汇总数据](#汇总数据)
 
+   ```mysql
+   select Department, Employee, Salary
+   from (
+       select b.name as Department,a.name as Employee, a.salary as Salary,(
+           select count(distinct salary)
+           from Employee
+           where Employee.salary >= a.salary and Employee.departmentId = a.departmentId
+       ) as 'rank'
+       from Employee a left join Department b on a.departmentId = b.id
+   ) c
+   where c.rank<=3;
+   ```
+
+   
 
 ## select 子句及其顺序
 
